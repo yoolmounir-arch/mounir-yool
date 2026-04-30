@@ -11,7 +11,7 @@ export async function generateGermanReading(
   const prompt = `Generate a German reading text for learners at level ${level}. Content type: ${type}. Topic: ${topic || 'surprise me'}. Use natural and grammatically correct German. Then provide a full Arabic translation and 10–15 important vocabulary words with Arabic meanings, simple German examples, and Arabic translations. Return structured JSON.`;
 
   const response = await ai.models.generateContent({
-    model: "gemini-3.1-pro-preview",
+    model: "gemini-2.5-flash",
     contents: prompt,
     config: {
       responseMimeType: "application/json",
