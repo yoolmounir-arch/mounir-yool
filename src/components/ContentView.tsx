@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { GeneratedContent } from '../types';
-import { Copy, Check, EyeOff, Eye, RefreshCw, Languages, BookA, Volume2, Square } from 'lucide-react';
+import { Copy, Check, EyeOff, Eye, RefreshCw, Languages, BookA } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface ContentViewProps {
@@ -14,13 +14,6 @@ export function ContentView({ content, onRegenerate, isLoading }: ContentViewPro
   const [showVocab, setShowVocab] = useState(true);
   const [copiedGerman, setCopiedGerman] = useState(false);
   const [copiedArabic, setCopiedArabic] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  useEffect(() => {
-    return () => {
-      window.speechSynthesis.cancel();
-    };
-  }, []);
 
   const copyToClipboard = async (text: string, setter: (val: boolean) => void) => {
     try {
@@ -29,21 +22,6 @@ export function ContentView({ content, onRegenerate, isLoading }: ContentViewPro
       setTimeout(() => setter(false), 2000);
     } catch (err) {
       console.error('Failed to copy', err);
-    }
-  };
-
-  const toggleSpeech = () => {
-    if (isPlaying) {
-      window.speechSynthesis.cancel();
-      setIsPlaying(false);
-    } else {
-      const utterance = new SpeechSynthesisUtterance(content.germanText);
-      utterance.lang = 'de-DE';
-      utterance.rate = 0.9; // Slightly slower for language learners
-      utterance.onend = () => setIsPlaying(false);
-      utterance.onerror = () => setIsPlaying(false);
-      window.speechSynthesis.speak(utterance);
-      setIsPlaying(true);
     }
   };
 
@@ -97,13 +75,6 @@ export function ContentView({ content, onRegenerate, isLoading }: ContentViewPro
           <div className="flex justify-between items-start mb-4 gap-2">
             <h2 className="text-lg md:text-xl font-serif text-slate-800 leading-snug">{content.title}</h2>
             <div className="flex items-center gap-1">
-              <button 
-                onClick={toggleSpeech}
-                className={`p-1.5 border rounded-md transition-colors shadow-sm ${isPlaying ? 'bg-amber-100 border-amber-200 text-amber-700' : 'bg-slate-50 border-slate-100 hover:bg-indigo-50 hover:border-indigo-100 text-slate-500 hover:text-indigo-600'}`}
-                title="Listen"
-              >
-                {isPlaying ? <Square className="w-3.5 h-3.5 fill-current" /> : <Volume2 className="w-3.5 h-3.5" />}
-              </button>
               <button 
                 onClick={() => copyToClipboard(content.germanText, setCopiedGerman)}
                 className="p-1.5 bg-slate-50 border border-slate-100 hover:bg-white text-slate-400 hover:text-slate-600 rounded-md transition-colors opacity-100 md:opacity-0 group-hover:opacity-100 shadow-sm"
